@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <link href="../css/estyloPaginas.css" rel="stylesheet" media="screen"/>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" 
+              integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous"></link>
+        <script type="text/javascript" src="../JavaScript/javaScript.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <script>
+            //<![CDATA[
+
+            function eliminar() {
+                Swal.fire({
+                    title: 'Desea Eliminar la sesion?',
+                    text: "Recuerde que no podrá hacer peticiones!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, Eliminar!'
+                }).then((result) => {
+                    if (result.value) {
+                       deleteSesion();
+                    }
+                });
+            }
+
+            //]]>
+        </script>
+    </h:head>
+    <h:body>
+        <h:form id="formSesion" >
+            <p:remoteCommand name="deleteSesion" actionListener="#{LogicaSesiones.eliminarSesion()}"/>
+            <p:panel style="width: 721px" header="Sesiones.">
+                <p:panelGrid>
+                    <p:row>
+                        <p:column>
+                            <p:dataTable style="margin-top: 5px; width: 665px" scrollable="true" scrollHeight="350" rowKey="#{terna.orden}" id="tbSesion" var="terna" value="#{LogicaSesiones.listaSesiones}"  
+                                         emptyMessage="No se encontraron registros.">
+                                <p:column style="font-size: 12px"  headerText="USUARIO"> 
+                                    <p:outputLabel value="#{terna.usuario}" />
+                                </p:column>
+                                <p:column style="font-size: 12px"  headerText="IP">
+                                    <p:outputLabel value="#{terna.ip}" />
+                                </p:column>
+                                <p:column style="font-size: 12px"  headerText="FECHA">
+                                    <p:outputLabel value="#{terna.fecha}" />
+                                </p:column>
+                                <p:column style="width:25px;text-align: center"> 
+                                    <p:commandButton style="width: 24px; height: 20px" icon="fas fa-trash-alt" onclick="eliminar();" > 
+                                        <f:setPropertyActionListener value="#{terna}" target="#{LogicaSesiones.sessiones}"/>
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                            <p:toolbar style="margin-top: 5px;" >
+                                <f:facet name="left" >
+                                    <p:commandButton icon="fas fa-sync-alt" value="Refrescar" action="#{LogicaSesiones.get_Sesiones()}"/> 
+                                    <p:commandButton id="btnSalir" icon="fas fa-times-circle" value="Salir" onclick="parent.cerrarTab('sesiones')"/>
+                                </f:facet>
+
+                                <f:facet name="right">
+                                    <p:commandButton style="visibility: hidden"/> 
+                                    <p:outputLabel value="Total Conexiones: #{LogicaSesiones.totalSesiones}"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:panel>
+        </h:form>
+    </h:body>
+</html>
+

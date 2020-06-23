@@ -1,0 +1,221 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <link href="../css/estyloPaginas.css" rel="stylesheet" media="screen"/>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" 
+              integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous"></link>
+        <script type="text/javascript" src="../JavaScript/javaScript.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <script>
+            //<![CDATA[
+            function limpiarLista() {
+                LimpiarTabla();
+            }
+            
+            function idVacio() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Digitar Perfil'
+                });
+            }
+            
+            function crearPerfil() {
+                Swal.fire({
+                    title: 'Desea crear el Perfil?',
+                    text: "Perfil para asignar a un Usuario!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí!'
+                }).then((result) => {
+                    if (result.value) {
+                      document.getElementById('formPer:nombre').focus();
+                      cargarTareas();
+                    }
+                });
+            }
+
+            function guardarEditar() {
+                let id = document.getElementById('formPer:idPerfil').value;
+                let nombre = document.getElementById('formPer:nombre').value;
+                let estado = document.getElementById('formPer:estado').value;
+                console.log(PF('estadow').getSelectedValue());
+                var mensajeError = [];
+
+                if (id === '') {
+                    mensajeError.push('Perfil');
+                }
+                if (nombre === '') {
+                    mensajeError.push('Nombre');
+                }
+                if (PF('estadow').getSelectedValue() === '1') {
+                    mensajeError.push('Seleccionar Estado');
+                }
+
+                var cont = 0;
+                for (var i = 0; i < mensajeError.length; i++) {
+                    cont++;
+                    console.log(mensajeError[i]);
+                }
+
+                if (cont === 0) {
+                    //console.log('pasar a plantilla');
+                    agregarEditar();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error...',
+                        text: 'Ingresar: "' + mensajeError.join('-') + '"'
+                    });
+                }
+
+            }
+
+            function trama() {
+                Swal.fire('Debe seleccionar minimo una tarea.');
+            }
+
+            function errores(dato) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error...',
+                    text: '"' + dato + '"'
+                });
+            }
+
+            function ok(dato) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '"' + dato + '"',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+            
+
+            //]]>
+        </script>    
+    </h:head>
+
+    <h:body>
+        <p:focus id="foco" for="#{PerfilLogica.foco}"/>
+        <h:form id="formPer">
+            <p:remoteCommand name="LimpiarTabla" actionListener="#{LogicaPerfil.cleanerTable(true)}"/>
+            <p:remoteCommand name="cargarTareas" actionListener="#{LogicaPerfil.cargarTareas()}"/>
+            <p:remoteCommand name="agregarEditar" actionListener="#{LogicaPerfil.guardarEditar()}"/>
+            <p:panel style="width: 620px" header="Perfiles.">
+                <p:panelGrid style="width: 600px; border: none">
+                    <p:row>
+                        <p:column style="width: 110px">
+                            Perfil:
+                        </p:column>
+                        <p:column style="width: 130px">
+                            <p:remoteCommand name="get_Perfil" action="#{LogicaPerfil.get_Perfil()}"/>
+                            <p:inputText id="idPerfil" autocomplete="off" value="#{LogicaPerfil.perfil.id}" disabled="#{LogicaPerfil.disableIdPerfil}" style="width: 100px" onkeypress="if (event.keyCode === 13) {
+                                        if (document.getElementById('formPer:idPerfil').value === '') {
+                                            idVacio();
+                                        }else{
+                                           get_Perfil(); 
+                                        }
+                                        return false;
+                                    }"/>
+                            <p:commandButton id="btnBus" icon="fa fa-search" onclick="PF('dlgPerw').show();" oncomplete="limpiarLista()"/>
+                        </p:column>
+                        <p:column style="width: 50px">
+                            Estado:
+                        </p:column>
+                        <p:column style="width: 130px">
+                            <p:selectOneMenu id="estado" widgetVar="estadow" value="#{LogicaPerfil.perfil.estado}" style="width: 145px">
+                                <f:selectItem itemLabel="SELECCIONAR" itemValue="1"/>
+                                <f:selectItem itemLabel="ACTIVO" itemValue="2"/>
+                                <f:selectItem itemLabel="INACTIVO" itemValue="3"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column style="width: 110px">
+                            Nombre:
+                        </p:column>
+                        <p:column colspan="3">
+                            <p:inputText id="nombre" autocomplete="off" value="#{LogicaPerfil.perfil.nombre}" onkeyup="aMayusculas(this.value, this.id);" style="width: 450px" onkeydown="if (event.keyCode === 13) {
+                                        document.getElementById('formPer:btnGuardar').focus();
+                                        return false;
+                                    }"/> 
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="4">
+                            <p:pickList id="picklist" value="#{LogicaPerfil.listaTareas}" var="tarea" itemLabel="#{tarea}" itemValue="#{tarea}" showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains">
+                                <f:facet name="sourceCaption">Tareas no Asignadas</f:facet>
+                                <f:facet name="targetCaption">Tareas Asignadas</f:facet>
+                            </p:pickList>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+                <p:toolbar style="margin-top: 10px">
+                    <f:facet name="left">
+                        <p:commandButton id="btnGuardar" style="width: 110px;text-align: left" value="#{LogicaPerfil.labelBtnGuardar}" icon="#{LogicaPerfil.iconoBtnGuardar}" disabled="#{LogicaPerfil.disableBtnGuardar}" onclick="guardarEditar()"/>
+                        <p:commandButton style="width: 110px;text-align: left" value="Cancelar" icon="fas fa-sync" actionListener="#{LogicaPerfil.limpiar()}"/>
+                        <p:commandButton style="width: 110px;text-align: left" value="Salir" icon="fas fa-times-circle" onclick="parent.cerrarTab('perfiles')"/>
+                    </f:facet>
+                </p:toolbar>
+            </p:panel>
+
+        </h:form> 
+
+        <p:dialog id="dlgPer" modal="true" closable="true" appendTo="@(body)" header="BUSCAR PERFIL." widgetVar="dlgPerw" width="350" height="300">
+            <h:form id="formBusPer">
+                <p:growl id="msg" showDetail="true"/>
+                <p:panelGrid id="gripBusPer">
+                    <p:focus context="gripBusPer"/>
+                    <p:row>
+                        <p:column style="text-align: right"> 
+                            <p:outputLabel value="Nombre:"/>
+                        </p:column>
+                        <p:column>
+                            <p:remoteCommand name="get_PerfilLista" action="#{LogicaPerfil.get_perfilLista()}" update="msg"/>
+                            <p:inputText id="nombreBus" autocomplete="off" value="#{LogicaPerfil.perfil.nombre}" onblur="aMayusculas(this.value, this.id)" style="width: 170px" onkeydown="if (event.keyCode === 13) {
+                                        get_PerfilLista();
+                                        return false;
+                                    }" onkeyup="aMayusculas(this.value, this.id);"/>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton icon="fa fa-search" actionListener="#{LogicaPerfil.get_perfilLista()}"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column colspan="3">
+                            <p:dataTable style="margin-top: 5px; width: 299px; height: 200px" scrollable="true" scrollHeight="250" rowKey="#{ter.id}" id="tbPer" var="ter" selectionMode="single" value="#{LogicaPerfil.listaPerfilesConsultados}"  
+                                         selection="#{LogicaPerfil.seleccionPerfil}" emptyMessage="No se encontraron registros.">  
+                                <p:ajax event="rowSelect" listener="#{LogicaPerfil.seleccionP}"/>  
+
+                                <p:column style="font-size: 12px; width: 60px" headerText="ID PER." > #{ter.id} </p:column>
+                                <p:column style="font-size: 12px" headerText="NOMBRE"> #{ter.nombre} </p:column>
+                            </p:dataTable>   
+                        </p:column>
+                    </p:row>
+                    <f:facet name="footer">
+                        <p:row>
+                            <p:column colspan="3">
+                                <center>
+                                    <p:commandButton value="Cerrar" icon="fas fa-times-circle" actionListener="#{LogicaPerfil.cleanerTable(false)}"/>
+                                </center>
+                            </p:column>
+                        </p:row>
+                    </f:facet>
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+
+
+
+
+
+    </h:body>
+</html>

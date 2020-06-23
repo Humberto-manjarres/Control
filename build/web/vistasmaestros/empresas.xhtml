@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <link href="../css/estyloPaginas.css" rel="stylesheet" media="screen"/>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" 
+              integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous"></link>
+        <script type="text/javascript" src="../JavaScript/javaScript.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <script>
+            //<![CDATA[
+            
+            function idVacio() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Digitar codigo de la empresa!'
+                });
+            }
+            
+            //]]>
+        </script>
+    </h:head>
+    <h:body>
+        <h:form id="formEmpresa" >
+            <p:panel style="width: 690px" header="Empresas.">
+                <p:panelGrid style="width: 670px">
+                    <p:row>
+                        <p:column style="width: 80px">
+                            <p:outputLabel value="Codigo:"/>
+                        </p:column>
+                        <p:column style="width: 150px">
+                            <p:inputText style="width: 100px" id="codigo" onblur="aMayusculas(this.value, this.id)" onkeydown="if (event.keyCode === 13) {
+                                        if (document.getElementById('formEmpresa:codigo').value ==='') {
+                                            idVacio();
+                                        }else{
+                                            
+                                        }
+                                        return false;
+                                    }"/>
+                            <p:commandButton id="btnBus" icon="fa fa-search"/>
+                        </p:column>
+                        <p:column style="width: 50px">
+                            <p:outputLabel value="Telefono:"/>
+                        </p:column>
+                        <p:column style="width: 170px">
+                            <p:inputText style="width: 230px" id="telefono"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column style="width: 80px">
+                            <p:outputLabel value="Nombre:"/>
+                        </p:column>
+                        <p:column style="width: 170px" colspan="3">
+                            <p:inputText style="width: 555px" id="nombre"/>
+                        </p:column>
+                    </p:row>
+                     <p:row>
+                        <p:column style="width: 80px">
+                            <p:outputLabel value="Email:"/>
+                        </p:column>
+                        <p:column style="width: 170px" colspan="3">
+                            <p:inputText style="width: 555px" id="email" placeholder="example@example.com"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column style="width: 60px">
+                            <p:outputLabel value="Direccion:"/>
+                        </p:column>
+                        <p:column colspan="3">
+                            <p:inputTextarea style="width: 555px" id="direccion" autoResize="false"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column style="width: 60px">
+                            <p:outputLabel value="Actividad:"/>
+                        </p:column>
+                        <p:column colspan="3">
+                            <p:inputTextarea style="width: 555px" id="actividad" autoResize="false"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+                 <p:toolbar style="margin-top: 10px;">
+                    <f:facet name="left">
+                        <p:commandButton id="btnGuardar" style="width: 110px; text-align: left" value="Guardar"/>
+                        <p:commandButton style="width: 110px; text-align: left" value="Cancelar" icon="fas fa-sync"/>
+                        <p:commandButton style="width: 110px; text-align: left" value="Salir" icon="fas fa-times-circle" onclick="parent.cerrarTab('empresas')"/>
+                    </f:facet>
+                </p:toolbar>
+            </p:panel>
+        </h:form>
+    </h:body>
+</html>
+

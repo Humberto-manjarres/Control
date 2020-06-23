@@ -1,0 +1,33 @@
+body {
+    font-size: 12px;
+}
+
+h1 {
+}
+
+a:link, a:visited {
+}
+
+a:link:hover, a:visited:hover  {
+}
+
+.noBorders tr, .noBorders td { 
+    border: none !important;
+    background: none !important;
+}
+
+.myLayoutStyleClass .ui-layout-unit-content{
+   background-image:url('../Imagenes/banner1.jpg');
+   background-position: 0px 0px;
+   background-repeat: no-repeat;
+   background-size: contain;
+}
+
+.someSensibleClassName {
+    vertical-align: bottom;
+}
+
+.ui-icon.fa{
+    text-indent: 0px;
+    background-image: none;
+}

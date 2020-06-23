@@ -1,0 +1,216 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <link href="css/estyloPaginas.css" rel="stylesheet" media="screen"/>
+        <link rel="shortcut icon" href="imagenes/money.ico" type="image/x-icon"></link>
+        <link href="font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" media="screen"/>
+        
+        <style type="text/css">
+            body{
+                background-image: url(imagenes/fondologin.jpg);
+                background-repeat: no-repeat;
+            }
+        </style>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script type="text/javascript" src="JavaScript/javaScript.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <script type="text/javascript">// <![CDATA[
+            //window.location = location.hostname + ":" + location.port + "/COMARCA/VOTO/indexMovil.xhtml";
+            /*SA.redirection_mobile({
+             tablet_redirection: "true",
+             mobile_url: "181.49.53.102:8443/comarca/indexmovil.xhtml"
+             });*/
+
+
+            function reloadKaptcha() {
+                document.getElementById('formLogin:imgCatpcha').attr('kaptcha.jpg?' + Math.floor(Math.random() * 100));
+            }
+
+            function focusInput(id) {
+                document.getElementById(id).focus();
+            }
+
+
+            function limpiar() {
+                document.getElementById('formLogin:usuario').value = '';
+                document.getElementById('formLogin:clave').value = '';
+                document.getElementById('formLogin:catpchaIndex').value = '';
+                document.getElementById('formLogin:usuario').focus();
+            }
+
+            function aceptar() {
+                let usu = document.getElementById('formLogin:usuario').value;
+                let pass = document.getElementById('formLogin:clave').value;
+                let cap = document.getElementById('formLogin:catpchaIndex').value;
+                var mensajeError = [];
+
+                if (usu === "" || usu === null) {
+                    mensajeError.push(' Usuario ');
+                }
+
+                if (pass === '' || pass === null) {
+                    mensajeError.push(' Contraseña ');
+                }
+
+                if (cap === '' || cap === null) {
+                    mensajeError.push(' Catpchat ');
+                }
+
+                var cont = 0;
+                for (var i = 0; i < mensajeError.length; i++) {
+                    cont++;
+                    console.log(mensajeError[i]);
+                }
+
+                if (cont === 0) {
+                    console.log('pasar a plantilla');
+                    logueo();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error...',
+                        text: 'Ingresar: "' + mensajeError.join('-') + '"'
+                    });
+                }
+
+            }
+            function catchapt() {
+                document.getElementById('formLogin:catpchaIndex').focus();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Digite el texto de la imagen Correctamente!'
+                });
+                document.getElementById('formLogin:catpchaIndex').value = '';
+
+            }
+
+            function erroreUsuario() {
+                limpiar();
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Usuario No Existe!'
+                });
+
+            }
+
+            function errorBD(datoError) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error...',
+                    text: 'Falla de Conexion a Base de Datos'
+                });
+            }
+
+
+            // ]]></script>
+        <title>Control</title>
+    </h:head>
+
+    <h:body>
+        
+        <p:idleMonitor timeout="1700000">
+            <p:ajax event="idle" oncomplete="PF('sessionTimeOutDialog').show();"/>
+        </p:idleMonitor>
+        
+        <p:confirmDialog widgetVar="sessionTimeOutDialog" closable="false" appendTo="@(body)" header="Alerta." message="Ha pasado un tiempo de inactividad, pulse el siguiente boton para volver a acceder a la aplicación." severity="alert">
+            <h:form id="formulario2">
+                <center> 
+                    <p:growl id="mensajeAlerta2" showDetail="true" life="8000"/>
+                    <p:commandButton value="Volver a la aplicación" id="usuarioLogin" oncomplete="logout();"/>
+                </center>
+            </h:form>
+        </p:confirmDialog>
+        
+        
+        <p:focus id="foco" for="#{LoginLogica.foco}"/>
+        <h:form id="formLogin" style="height: 328px; width: 700px; position: absolute; top: 50%; left: 50%; margin-top: -164px; margin-left: -350px;">  
+            <p:remoteCommand name="logueo" actionListener="#{LoginLogica.logueo()}"/>
+            <p:panel id="panel" style="width: 600px; border: hidden">  
+                <p:messages id="msg"/>
+                <p:panelGrid>  
+                    <p:row>
+                        <p:column colspan="4" style="padding: 0px">
+                            <p:graphicImage value="imagenes/banercontrologin.jpg" height="90px" width="100%"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Usuario:"/>
+                        </p:column>
+                        <p:column colspan="2"> 
+                            <p:inputText type="text" style="width: 98%" id="usuario" value="#{LoginLogica.login.usuario}" onblur="aMayusculas(this.value, this.id)" onkeydown="if (event.keyCode === 13) {
+                                        seleccionarTexto('formLogin:clave');
+                                        return false;
+                                    }"/> 
+                        </p:column>
+                        <p:column rowspan="6" style="width: 200px; padding: initial;">
+                            <p:graphicImage value="imagenes/seguridad.jpg" height="240px" width="200px"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column> 
+                            <p:outputLabel value="Contraseña:" /> 
+                        </p:column>
+                        <p:column colspan="2"> 
+                            <p:inputText style="width: 98%" type="password" value="#{LoginLogica.login.clave}" id="clave" onkeydown="if (event.keyCode === 13) {
+                                        seleccionarTexto('formLogin:catpchaIndex');
+                                        return false;
+                                    }"/>
+                        </p:column>
+                    </p:row>
+                    <p:row>  
+                        <p:column> 
+                            <p:outputLabel value="Captcha:" /> 
+                        </p:column>
+                        <p:column style="width: 200px"> 
+                            <div style="position: relative;">
+                                <h:commandButton id="refrescar" style="position: absolute; right: 0; border: none; background: none;" image="imagenes/refresh.png" onclick="reloadKaptcha()" />
+                            </div>
+                            <img src="kaptcha.jpg" id="imgCatpcha"/>
+                        </p:column>
+
+                    </p:row>
+                    <p:row>
+                        <p:column> 
+                            <p:outputLabel value="Codigo Imagen:"/> 
+                        </p:column>
+                        <p:column colspan="2"> 
+                            <p:inputText style="width: 98%" type="text" id="catpchaIndex" value="#{LoginLogica.login.catpcha}" autocomplete="off" onkeydown="if (event.keyCode === 13) {
+                                        focusInput('formLogin:btnAceptar');
+                                        return false;
+                                    }"/>
+                        </p:column>
+                    </p:row>
+
+
+                    <p:row>
+                        <p:column colspan="3" style="text-align: center"> 
+                            <p:commandButton id="btnAceptar" style="width: 150px; margin-right: 20px" icon="fa fa-check" value="Acceder" onclick="aceptar()"/> 
+                            <p:commandButton style="width: 150px" icon="fa fa-refresh" value="Cancelar" id="cancelar" onclick="limpiar();"/> 
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>  
+
+
+
+            </p:panel>  
+        </h:form> 
+
+
+
+
+    </h:body>
+    <script type="text/javascript">
+        //<![CDATA[   
+        function logout() {
+            window.location = location.protocol + "//" + location.hostname + ":" + location.port + '#{facesContext.externalContext.requestContextPath}';
+        }
+        //]]>
+    </script>
+</html>

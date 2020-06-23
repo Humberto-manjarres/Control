@@ -1,0 +1,264 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Control</title>
+        <link href="css/estyloPaginas.css" rel="stylesheet" media="screen"/>
+        <link href="font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" media="screen"/>
+        <link rel="shortcut icon" href="imagenes/money.ico" type="image/x-icon"></link>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <style type="text/css">
+            form{
+                background-image: url(imagenes/cabezera4.jpg);
+                background-repeat: no-repeat;
+            }
+        </style>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+        <style>
+            .ui-tabs-active {
+                font-size: 16px !important; 
+                font-weight: bold !important; 
+            }
+            .divFiltra {
+                position: relative;
+            }
+            .divFiltra:after {
+                content: "\f002";
+                font-family: FontAwesome;
+                font-style: normal;
+                font-weight: normal;
+                text-decoration: inherit;
+                font-size: 14px;
+                padding-left: 10px;
+                padding-right: 0.5em;
+                position: absolute;
+                left: 0px;
+                top: 10px;
+            }
+            .fa-stack[data-count]:after{
+                position:absolute;
+                right:-0%;
+                top:1%;
+                content : attr(data-count);
+                font-size:55%;
+                padding:.6em;
+                border-radius:999px;
+                line-height:.75em;
+                color: white;
+                background:rgba(255,0,0,.85);
+                text-align:center;
+                min-width:1em;
+                font-weight:bold;
+            }
+            .ui-panelmenu{
+                margin-bottom: 15px !important;
+            }
+        </style>
+
+
+        <script>
+            //<![CDATA[
+
+            //filtra tareas menu
+            function filtrarTarea() {
+                // Declare variables
+                var input, filter, ul, li, a, i, h3;
+                input = document.getElementById('men:buscaTarea');
+                filter = input.value.toUpperCase();
+                ul = document.getElementById("men:menu");
+                h3 = ul.getElementsByTagName('h3');
+                li = ul.getElementsByTagName('li');
+
+                // Loop through all list items, and hide those who don't match the search query
+
+                for (i = 0; i < li.length; i++) {
+                    if (padre === null) {
+                        padre = (li[i].parentNode).parentNode.id;
+                    }
+                    a = li[i].getElementsByTagName("a")[0];
+                    span = a.innerHTML.toUpperCase();
+                    span = span.substring((span.indexOf('>')) + 1, (span.lastIndexOf('<')));
+                    if (span.indexOf(filter) > -1) {
+                        li[i].style.display = "";
+                        contiene = true;
+                    } else {
+                        li[i].style.display = "none";
+                    }
+                    if (padre === (li[i].parentNode).parentNode.id) {
+                        if (i === (li.length - 1)) {
+                            if (contiene) {
+                                h3[(parseInt(padre.substring(padre.indexOf('_') + 1, padre.length)))].style.display = "";
+                            } else {
+                                h3[(parseInt(padre.substring(padre.indexOf('_') + 1, padre.length)))].style.display = "none";
+                            }
+                        }
+                    } else {
+                        if (contiene) {
+                            h3[(parseInt(padre.substring(padre.indexOf('_') + 1, padre.length)))].style.display = "";
+                        } else {
+                            h3[(parseInt(padre.substring(padre.indexOf('_') + 1, padre.length)))].style.display = "none";
+                        }
+                        contiene = false;
+                        padre = (li[i].parentNode).parentNode.id;
+                    }
+                }
+                padre = null;
+                contiene = false;
+            }
+
+
+            $(function () {
+                var existeTab = false;
+                var tabs = $("#tabs").tabs();
+
+                cargar = function (formulario, nombre, icono, tarea, sesion) {
+
+                    $('#tabs ul li a').each(function (i) {
+                        if (this.text === ' ' + nombre) {
+                            existeTab = true;
+                            tabs.tabs({active: i});
+                            if (sesion !== '') {
+                                tabs.tabs({active: i});
+                                var panelId = $(this).closest("li").remove().attr("aria-controls");
+                                $("#" + panelId).remove();
+                                tabs.tabs("refresh");
+                                var id = "tabs-" + tarea;
+                                tabs.find(".ui-tabs-nav").append('<li><a href="#' + id + '"><i class="' + icono + '"></i> ' + nombre + '</a> <span class="ui-icon ui-icon-close" role="presentation">Remove Tab</span></li>');
+                                tabs.append("<div id='" + id + "' style='padding: 0px; height: 94%'><iframe style='padding: 0px' id='" + tarea + "' src='" + formulario + ".xhtml' width='100%' height='100%' frameborder='0'></iframe></div>");
+                                setTimeout(function () {
+                                    tabs.tabs("refresh");
+                                    tabs.tabs("option", "active", $("div#tabs ul li").length - 1);
+                                }, 0);
+                            }
+                        }
+                    });
+
+                    if (!existeTab) {
+                        var id = "tabs-" + tarea;
+                        console.log('id -> ' + id);
+                        tabs.find(".ui-tabs-nav").append('<li><a href="#' + id + '"><i class="' + icono + '"></i> ' + nombre + '</a> <span class="ui-icon ui-icon-close" role="presentation">Remove Tab</span></li>');
+                        tabs.append("<div id='" + id + "' style='padding: 0px; height: 94%'><iframe style='position: relative; z-index: 1; background-color: transparent; padding: 0px' id='" + tarea + "' src='" + formulario + ".xhtml' width='100%' height='100%' frameborder='0'></iframe></div>");
+                        setTimeout(function () {
+                            tabs.tabs("refresh");
+                            tabs.tabs("option", "active", $("div#tabs ul li").length - 1);
+                        }, 0);
+                    }
+                    existeTab = false;
+
+                };
+
+
+                cerrarTab = function () {
+                    var panelId = tabs.find(".ui-tabs-active").remove().attr("aria-controls");
+                    $("#" + panelId).remove();
+                    tabs.tabs("refresh");
+                };
+
+                // Close icon: removing the tab on click
+                tabs.on("click", "span.ui-icon-close", function () {
+                    var panelId = $(this).closest("li").remove().attr("aria-controls");
+                    $("#" + panelId).remove();
+                    tabs.tabs("refresh");
+                });
+
+
+                tabs.on("keyup", function (event) {
+                    if (event.altKey && event.keyCode === $.ui.keyCode.BACKSPACE) {
+                        var panelId = tabs.find(".ui-tabs-active").remove().attr("aria-controls");
+                        $("#" + panelId).remove();
+                        tabs.tabs("refresh");
+                    }
+                });
+
+
+            });
+
+            //]]>
+        </script>
+    </h:head>
+    <h:body>
+        <p:idleMonitor timeout="1800000">
+            <p:ajax event="idle" oncomplete="PF('sessionTimeOutDialog').show();"/>
+        </p:idleMonitor>
+        <p:confirmDialog widgetVar="sessionTimeOutDialog" closable="false" appendTo="@(body)" header="Alerta." message="Ha pasado un tiempo de inactividad, pulse el siguiente boton para volver a acceder a la aplicación." severity="alert">
+            <h:form id="formulario2">
+                <center> 
+                    <p:growl id="mensajeAlerta2" showDetail="true" life="8000"/>
+                    <p:commandButton value="Volver a la aplicación" id="usuario" action="#{LogicaPlantilla.logoutPagina()}" oncomplete="logout();"/>
+                </center>
+            </h:form>
+        </p:confirmDialog>
+
+        <pe:layout id="pidcabecera" fullPage="true" style="border: none">
+
+            <p:layoutUnit id="layoutCabecera" position="north" style="border: none">
+                <h:form id="form" style="height: 70px">
+                    <p:graphicImage value="imagenes/money2.png" height="60px" width="100px"/>
+                    <p:outputLabel value="CONTROL - Administrador de Prestamos" style="font-size: 24px; font-weight: bold; color: #ffffff; font-family: cursive"/>
+                    <p:panelGrid id="panelBorder1" styleClass="noBorders" style="float: right">
+                        <p:row>
+                            <p:column style="padding: 0px;">
+                                <p:graphicImage value="imagenes/#{session.getAttribute('sexo')}.png"/>
+                            </p:column>
+                            <p:column style="padding: 0px; color: #ffffff;text-align: center">
+                                <strong>#{session.getAttribute('usuario')}<br>#{session.getAttribute('nombre')}</br></strong>
+                                <br>
+                                    <h:inputHidden id="hidden"/>
+                                    <p:splitButton icon="fa fa-power-off">
+                                        <p:menuitem value="Cambiar contraseña" icon="fa fa-unlock-alt"/>
+                                        <p:menuitem value="Cerrar sesión" icon="fa fa-power-off" action="#{LogicaPlantilla.logouTodo()}"/>
+                                    </p:splitButton>
+                                </br>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </h:form>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="west" size="250" style="border: none" styleClass="padding: 0px">
+                <p:outputPanel style="text-align: center;font-size: 20px; font-family: cursive">
+                    Menu 
+                </p:outputPanel>
+                <h:form id="men" style="border: none">
+                    <p:panelMenu id="menu" style="width: 100%; border: none" model="#{Menu.model}" />
+                </h:form>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center" id="ssd" style="border: none;" styleClass="padding: 0px">
+
+                <div id="tabs" style="height: 620px;position: relative">
+                    <ul>
+
+                    </ul>
+
+                </div>
+
+            </p:layoutUnit>
+
+            <p:layoutUnit position="south" closable="false" style="border: none">
+                <p:outputPanel style="float: right">
+                    <strong>version 1.0</strong>  
+                </p:outputPanel>
+                <p:outputPanel>
+                    <strong>Copyright &#169; 2020 <a>HUMBERTO MANJARRES</a>. Telefonó: (57) 3002954067. Email: totopercusion@gmail.com</strong>  Todos los derechos reservados.
+                </p:outputPanel>
+            </p:layoutUnit>
+
+        </pe:layout>
+
+    </h:body>
+    <script type="text/javascript">
+        //<![CDATA[   
+        function logout() {
+            window.location = location.protocol + "//" + location.hostname + ":" + location.port + '#{facesContext.externalContext.requestContextPath}';
+        }
+        //]]>
+    </script>
+</html>
+

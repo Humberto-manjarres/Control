@@ -1,0 +1,16 @@
+COMMONS LANG => Las bibliotecas estándar de Java no proporcionan suficientes métodos para la manipulación de sus clases principales.
+Apache Commons Lang proporciona estos métodos adicionales.
+Lang proporciona una gran cantidad de utilidades de ayuda para la API java.lang,
+en particular los métodos de manipulación de cadenas, métodos numéricos básicos, reflexión de objetos, concurrencia, 
+creación y serialización y propiedades del sistema.
+Además, contiene mejoras básicas para java.util.Date y una serie de utilidades dedicadas a ayudar con los métodos de construcción, como hashCode, toString e equals.
+
+Tenga en cuenta que Lang 3.0 (y versiones posteriores) usan un paquete diferente ( org.apache.commons.lang3 ) que las versiones anteriores ( org.apache.commons.lang ), lo que permite que se use al mismo tiempo que una versión anterior.
+https://www.primefaces.org/showcase-ext/views/home.jsf
+
+
+PRIMEFACE EXTENSIONS => PrimeFaces Extensions es una biblioteca ligera de componentes de código abierto para Java Server Faces 2.0. 
+El proyecto se basa en PrimeFaces, un conjunto de componentes maduro y robusto. PrimeFaces Extensions consta de componentes extendidos que faltan en otras bibliotecas JSF 2 o con componentes mejorados que ya existen en algún lugar pero que no funcionan allí sin problemas. Además de eso, proporciona Comportamientos de Cliente, Convertidores, TagHandlers útiles y más.
+http://commons.apache.org/proper/commons-lang/index.html
+
+NOTA => PARA UTILIZAR PRIMEFACE-EXTENSION SE DEBE UTILIZAR TAMBIEN LA LIBRERIA COMMONS LANG
