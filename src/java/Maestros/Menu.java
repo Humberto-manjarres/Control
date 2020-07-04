@@ -5,6 +5,7 @@
  */
 package Maestros;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -15,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
@@ -35,19 +37,23 @@ public class Menu extends Conexion implements Serializable {
     ResultSet rs = null;
     Connection con = null;
     HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-
-    public Menu() throws SQLException, ClassNotFoundException {
+    PrimeFaces instance = PrimeFaces.current();
+    
+    public Menu() throws SQLException, ClassNotFoundException, IOException {
         cargar_menu();
     }
 
-    public void cargar_menu() throws SQLException, ClassNotFoundException {
+    public void cargar_menu() throws SQLException, ClassNotFoundException, IOException {
         System.out.println("sesion id ->" + session.getAttribute("idSession"));
         try {
             model = new DefaultMenuModel();
             con = conectar();
             call = obtener_menu(call);
             System.out.println("Respuesta MYSQL -> "+call.getString(3));
-            
+            if (!call.getString(3).equals("0|")) {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
+                //instance.executeScript("alert('Error Debe estar Logueado!!');");
+            }
             if (call.getString(3).equals("0|")) {
                 rs = call.getResultSet();
                 while (rs.next()) {

@@ -65,6 +65,7 @@ public class LoginLogica implements Serializable{
         } else {
             session.setAttribute("soservidor", "linux");
         }
+        System.out.println("verificar");
     }
 
     public void logueo() throws Exception {
@@ -81,12 +82,6 @@ public class LoginLogica implements Serializable{
                 listaUsuario = daoLogin.login(login.getUsuario(), login.getClave(), sesionId);
             } catch (Exception e) {
                 System.out.println("error LoginLogica --> " + e);
-                /*
-                System.out.println("mi variable e es de tipo " + ((Object) e + "").getClass().getSimpleName());
-                String sCadena = e+"";
-                String sSubCadena = sCadena.substring(5, 60);
-                System.out.println("cadena extraer---> "+sSubCadena);
-                */
                 String error = "Base de datos";
                 instance.executeScript("errorBD('" + error + "');");
                 return;

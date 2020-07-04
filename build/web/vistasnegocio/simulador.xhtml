@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+        <link href="../css/estyloPaginas.css" rel="stylesheet" media="screen"/>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" 
+              integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous"></link>
+        <script type="text/javascript" src="../JavaScript/javaScript.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+        <script>
+            //<![CDATA[
+
+
+            function formatNumber() {
+                const number = document.getElementById('formSimulador:prestamo');
+                console.log(number);
+
+            }
+
+            function format(input)
+            {
+                var num = input.value.replace(/\./g, '');
+                if (!isNaN(num)) {
+                    num = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+                    num = num.split('').reverse().join('').replace(/^[\.]/, '');
+                    input.value = num;
+                } else {
+                    alert('Solo se permiten numeros');
+                    input.value = input.value.replace(/[^\d\.]*/g, '');
+                }
+            }
+
+
+            //]]>
+        </script>    
+    </h:head>
+    <h:body>
+        <h:form id="formSimulador" >
+            <p:panel style="width: 810px" header="Simulador de Prestamos.">
+                <p:panelGrid style="width: 780px;">
+                    <p:row>
+                        <p:column style="width: 110px">
+                            <p:outputLabel value="Prestamo:"/>
+                        </p:column>
+                        <p:column style="width: 140px">
+                            <p:inputText autocomplete="off" style="width: 120px" id="prestamo" onkeyup="format(this)" onkeydown="if (event.keyCode === 13) {
+
+                                    }"/> 
+                        </p:column>
+                        <p:column style="width: 110px">
+                            <p:outputLabel value="N° Cuotas:"/>
+                        </p:column>
+                        <p:column style="width: 140px">
+                            <p:inputText style="width: 120px" id="ncuotas" onblur="aMayusculas(this.value, this.id)" onkeydown="if (event.keyCode === 13) {
+
+                                    }"/> 
+                        </p:column>
+                        <p:column style="width: 130px">
+                            <p:outputLabel value="Tipo Cuotas:"/>
+                        </p:column>
+                        <p:column style="width: 120px">
+                            <p:selectOneMenu id="tcuotas" widgetVar="tcuotasw" value="#{LogicaUsuario.usuario.estado}" style="width: 145px">
+                                <f:selectItem itemLabel="SELECCIONAR" itemValue="1"/>
+                                <f:selectItem itemLabel="QUINCENAL" itemValue="2"/>
+                                <f:selectItem itemLabel="MENSUAL" itemValue="3"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+                <p:dataTable var="pres">
+                    <p:column style="font-size: 12px; width: 7px; text-align: center" headerText="#">
+                        <h:outputText value="1" />
+                    </p:column>
+
+                    <p:column headerText="Cuota" priority="3">
+                        <h:outputText value="2" />
+                    </p:column>
+
+                    <p:column headerText="Interes" priority="2">
+                        <h:outputText value="3" />
+                    </p:column>
+
+                    <p:column headerText="Prestamo" priority="4">
+                        <h:outputText value="4" />
+                    </p:column>
+
+                    <p:column headerText="Fecha" priority="4">
+                        <h:outputText value="4" />
+                    </p:column>
+
+                    <p:column headerText="Capital" priority="4">
+                        <h:outputText value="4" />
+                    </p:column>
+                </p:dataTable>
+                <p:toolbar style="margin-top: 10px;">
+                    <f:facet name="left">
+                        <p:commandButton id="btnCalcular" style="width: 110px; text-align: left" value="Calcular"/>
+                        <p:commandButton style="width: 110px; text-align: left" value="Cancelar" icon="fas fa-sync"/>
+                        <p:commandButton style="width: 110px; text-align: left" value="Salir" icon="fas fa-times-circle" onclick="parent.cerrarTab('simulador')"/>
+                    </f:facet>
+                </p:toolbar>
+            </p:panel>
+        </h:form>
+    </h:body>
+</html>
+
