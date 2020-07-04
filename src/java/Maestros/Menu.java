@@ -52,7 +52,6 @@ public class Menu extends Conexion implements Serializable {
             System.out.println("Respuesta MYSQL -> "+call.getString(3));
             if (!call.getString(3).equals("0|")) {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
-                //instance.executeScript("alert('Error Debe estar Logueado!!');");
             }
             if (call.getString(3).equals("0|")) {
                 rs = call.getResultSet();
