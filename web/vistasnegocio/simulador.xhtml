@@ -14,13 +14,6 @@
         <script>
             //<![CDATA[
 
-
-            function formatNumber() {
-                const number = document.getElementById('formSimulador:prestamo');
-                console.log(number);
-
-            }
-
             function format(input)
             {
                 var num = input.value.replace(/\./g, '');
@@ -33,37 +26,86 @@
                     input.value = input.value.replace(/[^\d\.]*/g, '');
                 }
             }
+            
+            function calculando() {
+                let prestamo = document.getElementById('formSimulador:prestamo').value;
+                let ncuotas = document.getElementById('formSimulador:ncuotas').value;
+                let porc = document.getElementById('formSimulador:porcentaje').value;
+                
+                var mensajeError = [];
+                if (prestamo === '') {
+                    mensajeError.push('Prestamo');
+                }
+
+                if (ncuotas === '') {
+                    mensajeError.push('Numero Cuotas');
+                }
+                
+                if (porc === '') {
+                    mensajeError.push('Porcentaje');
+                }
+                
+                 if (PF('tcuotasw').getSelectedValue() === '1') {
+                    mensajeError.push('Seleccionar Tipo');
+                }
+                
+                var cont = 0;
+                for (var i = 0; i < mensajeError.length; i++) {
+                    cont++;
+                }
+                
+                if (cont === 0) {
+                    calculo();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error...',
+                        text: 'Ingresar: "' + mensajeError.join(' - ') + '"'
+                    });
+                }
+                
+            }
 
 
             //]]>
         </script>    
     </h:head>
     <h:body>
+        <p:focus id="foco" for="#{LogicaSimulador.foco}"/>
         <h:form id="formSimulador" >
-            <p:panel style="width: 810px" header="Simulador de Prestamos.">
-                <p:panelGrid style="width: 780px;">
+            <p:remoteCommand name="calculo" actionListener="#{LogicaSimulador.calcular()}"/>
+            <p:panel style="width: 950px" header="Simulador de Prestamos.">
+                <p:panelGrid style="width: 930px;">
                     <p:row>
                         <p:column style="width: 110px">
                             <p:outputLabel value="Prestamo:"/>
                         </p:column>
-                        <p:column style="width: 140px">
-                            <p:inputText autocomplete="off" style="width: 120px" id="prestamo" onkeyup="format(this)" onkeydown="if (event.keyCode === 13) {
-
+                        <p:column style="width: 120px">
+                            <p:inputText autocomplete="off" style="width: 100px" id="prestamo" value="#{LogicaSimulador.simulador.prestamo}" onkeyup="format(this)" onkeydown="if (event.keyCode === 13) {
+                                    
                                     }"/> 
                         </p:column>
                         <p:column style="width: 110px">
                             <p:outputLabel value="N° Cuotas:"/>
                         </p:column>
-                        <p:column style="width: 140px">
-                            <p:inputText style="width: 120px" id="ncuotas" onblur="aMayusculas(this.value, this.id)" onkeydown="if (event.keyCode === 13) {
+                        <p:column style="width: 80px">
+                            <p:inputText style="width: 75px" id="ncuotas" value="#{LogicaSimulador.simulador.cuotas}" onkeydown="if (event.keyCode === 13) {
 
                                     }"/> 
                         </p:column>
-                        <p:column style="width: 130px">
+                        <p:column style="width: 70px">
+                            <p:outputLabel value="Porcentaje: "/>
+                        </p:column>
+                        <p:column style="width: 80px">
+                            <p:inputText style="width: 70px" id="porcentaje" value="#{LogicaSimulador.simulador.porcentaje}" onkeydown="if (event.keyCode === 13) {
+
+                                    }"/> 
+                        </p:column>
+                        <p:column style="width: 120px">
                             <p:outputLabel value="Tipo Cuotas:"/>
                         </p:column>
                         <p:column style="width: 120px">
-                            <p:selectOneMenu id="tcuotas" widgetVar="tcuotasw" value="#{LogicaUsuario.usuario.estado}" style="width: 145px">
+                            <p:selectOneMenu id="tcuotas" widgetVar="tcuotasw" value="#{LogicaSimulador.simulador.tipoCuotas}" style="width: 110px">
                                 <f:selectItem itemLabel="SELECCIONAR" itemValue="1"/>
                                 <f:selectItem itemLabel="QUINCENAL" itemValue="2"/>
                                 <f:selectItem itemLabel="MENSUAL" itemValue="3"/>
@@ -98,7 +140,7 @@
                 </p:dataTable>
                 <p:toolbar style="margin-top: 10px;">
                     <f:facet name="left">
-                        <p:commandButton id="btnCalcular" style="width: 110px; text-align: left" value="Calcular"/>
+                        <p:commandButton id="btnCalcular" style="width: 110px; text-align: left" value="Calcular" onclick="calculando()"/>
                         <p:commandButton style="width: 110px; text-align: left" value="Cancelar" icon="fas fa-sync"/>
                         <p:commandButton style="width: 110px; text-align: left" value="Salir" icon="fas fa-times-circle" onclick="parent.cerrarTab('simulador')"/>
                     </f:facet>
