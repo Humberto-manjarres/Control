@@ -16,10 +16,49 @@ public class Simulador implements Serializable{
     private int cuotas;
     private float porcentaje;
     private String tipoCuotas;
+    
+    private String id;
+    private String cuota;
+    private String capitalPagar;
+    private String fechaPago;
 
     public Simulador() {
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    
+    public String getCuota() {
+        return cuota;
+    }
+
+    public void setCuota(String cuota) {
+        this.cuota = cuota;
+    }
+
+    public String getCapitalPagar() {
+        return capitalPagar;
+    }
+
+    public void setCapitalPagar(String capitalPagar) {
+        this.capitalPagar = capitalPagar;
+    }
+
+    public String getFechaPago() {
+        return fechaPago;
+    }
+
+    public void setFechaPago(String fechaPago) {
+        this.fechaPago = fechaPago;
+    }
+    
+    
+    
     public float getPorcentaje() {
         return porcentaje;
     }

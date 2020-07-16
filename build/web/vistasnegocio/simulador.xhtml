@@ -26,12 +26,12 @@
                     input.value = input.value.replace(/[^\d\.]*/g, '');
                 }
             }
-            
+
             function calculando() {
                 let prestamo = document.getElementById('formSimulador:prestamo').value;
                 let ncuotas = document.getElementById('formSimulador:ncuotas').value;
-                let porc = document.getElementById('formSimulador:porcentaje').value;
-                
+                let porc = document.getElementById('formSimulador:interes').value;
+
                 var mensajeError = [];
                 if (prestamo === '') {
                     mensajeError.push('Prestamo');
@@ -40,20 +40,20 @@
                 if (ncuotas === '') {
                     mensajeError.push('Numero Cuotas');
                 }
-                
+
                 if (porc === '') {
-                    mensajeError.push('Porcentaje');
+                    mensajeError.push('Interes');
                 }
-                
-                 if (PF('tcuotasw').getSelectedValue() === '1') {
+
+                if (PF('tcuotasw').getSelectedValue() === '1') {
                     mensajeError.push('Seleccionar Tipo');
                 }
-                
+
                 var cont = 0;
                 for (var i = 0; i < mensajeError.length; i++) {
                     cont++;
                 }
-                
+
                 if (cont === 0) {
                     calculo();
                 } else {
@@ -63,14 +63,19 @@
                         text: 'Ingresar: "' + mensajeError.join(' - ') + '"'
                     });
                 }
-                
+
             }
 
+            window.addEventListener("load", function () {
+                document.getElementById('formSimulador:ncuotas').value = '';
+                document.getElementById('formSimulador:interes').value = '';
+            });
 
+            
             //]]>
         </script>    
     </h:head>
-    <h:body>
+    <h:body onunload="clearCuotasPorc();">
         <p:focus id="foco" for="#{LogicaSimulador.foco}"/>
         <h:form id="formSimulador" >
             <p:remoteCommand name="calculo" actionListener="#{LogicaSimulador.calcular()}"/>
@@ -82,7 +87,7 @@
                         </p:column>
                         <p:column style="width: 120px">
                             <p:inputText autocomplete="off" style="width: 100px" id="prestamo" value="#{LogicaSimulador.simulador.prestamo}" onkeyup="format(this)" onkeydown="if (event.keyCode === 13) {
-                                    
+
                                     }"/> 
                         </p:column>
                         <p:column style="width: 110px">
@@ -94,10 +99,10 @@
                                     }"/> 
                         </p:column>
                         <p:column style="width: 70px">
-                            <p:outputLabel value="Porcentaje: "/>
+                            <p:outputLabel value="Interes: "/>
                         </p:column>
                         <p:column style="width: 80px">
-                            <p:inputText style="width: 70px" id="porcentaje" value="#{LogicaSimulador.simulador.porcentaje}" onkeydown="if (event.keyCode === 13) {
+                            <p:inputText style="width: 70px" id="interes" value="#{LogicaSimulador.simulador.porcentaje}" onkeydown="if (event.keyCode === 13) {
 
                                     }"/> 
                         </p:column>
@@ -113,29 +118,21 @@
                         </p:column>
                     </p:row>
                 </p:panelGrid>
-                <p:dataTable var="pres">
-                    <p:column style="font-size: 12px; width: 7px; text-align: center" headerText="#">
-                        <h:outputText value="1" />
+                <p:dataTable id="tablaSimulador" style="font-weight: bold"  var="pres" value="#{LogicaSimulador.listaSimulacro}" scrollable="true" scrollHeight="400">
+                    <p:column style="font-size: 12px; width: 30px; text-align: center" headerText="#">
+                        <h:outputText value="#{pres.id}"/>
                     </p:column>
 
                     <p:column headerText="Cuota" priority="3">
-                        <h:outputText value="2" />
-                    </p:column>
-
-                    <p:column headerText="Interes" priority="2">
-                        <h:outputText value="3" />
-                    </p:column>
-
-                    <p:column headerText="Prestamo" priority="4">
-                        <h:outputText value="4" />
-                    </p:column>
-
-                    <p:column headerText="Fecha" priority="4">
-                        <h:outputText value="4" />
+                        <h:outputText value="$#{pres.cuota}" />
                     </p:column>
 
                     <p:column headerText="Capital" priority="4">
-                        <h:outputText value="4" />
+                        <h:outputText value="$#{pres.capitalPagar}" />
+                    </p:column>
+                    
+                    <p:column headerText="Fecha" priority="4">
+                        <h:outputText value="#{pres.fechaPago}" />
                     </p:column>
                 </p:dataTable>
                 <p:toolbar style="margin-top: 10px;">
