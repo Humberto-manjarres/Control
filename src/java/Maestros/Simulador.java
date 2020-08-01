@@ -6,6 +6,8 @@
 package Maestros;
 
 import java.io.Serializable;
+import java.util.Date;
+
 
 /**
  *
@@ -21,9 +23,19 @@ public class Simulador implements Serializable{
     private String cuota;
     private String capitalPagar;
     private String fechaPago;
+    private Date diaPago;
 
     public Simulador() {
     }
+
+    public Date getDiaPago() {
+        return diaPago;
+    }
+
+    public void setDiaPago(Date diaPago) {
+        this.diaPago = diaPago;
+    }
+    
 
     public String getId() {
         return id;

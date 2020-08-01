@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.Types;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
@@ -32,11 +33,11 @@ public class DaoSimulador extends Conexion implements Serializable {
     List<Simulador> listaSimulacro;
     DecimalFormat formatea;
 
-    public List<Simulador> getSimulacro(int prestamo,int ncuotas, String tipoC, int cuotaPagar, int capital) {
+    public List<Simulador> getSimulacro(int prestamo,int ncuotas, String tipoC, int cuotaPagar, int capital, String fechaPago) {
         listaSimulacro = new ArrayList<>();
         try {
             con = conectar();
-            call = con.prepareCall("call _spgetsimulador(?,?,?,?,?,?,?,?)");
+            call = con.prepareCall("call _spgetsimulador(?,?,?,?,?,?,?,?,?)");
             call.setString(1, session.getAttribute("idSession") + "");
             call.setString(2, session.getAttribute("usuario") + "");
             call.setInt(3, prestamo);
@@ -44,10 +45,11 @@ public class DaoSimulador extends Conexion implements Serializable {
             call.setString(5, tipoC);
             call.setInt(6, cuotaPagar);
             call.setInt(7, capital);
-            call.registerOutParameter(8, Types.VARCHAR);
+            call.setString(8, fechaPago);
+            call.registerOutParameter(9, Types.VARCHAR);
             call.execute();
-            System.out.println("respuesta getSimulador -> "+call.getString(8));
-            if (call.getString(8).equals("0|")) {
+            System.out.println("respuesta getSimulador -> "+call.getString(9));
+            if (call.getString(9).equals("0|")) {
                 rs = call.getResultSet();
                 while (rs.next()) {
                     formatea = new DecimalFormat("###,###.##");

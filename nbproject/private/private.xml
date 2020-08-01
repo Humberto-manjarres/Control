@@ -8,8 +8,9 @@
             <file>file:/C:/Users/Humberto%20Manjarres/Documents/NetBeansProjects/Control/web/vistaseguridad/usuarios.xhtml</file>
             <file>file:/C:/Users/Humberto%20Manjarres/Documents/NetBeansProjects/Control/src/java/Dao/DaoUsuarios.java</file>
             <file>file:/C:/Users/Humberto%20Manjarres/Documents/NetBeansProjects/Control/web/vistasnegocio/simulador.xhtml</file>
+            <file>file:/C:/Users/Humberto%20Manjarres/Documents/NetBeansProjects/Control/web/vistaseguridad/perfiles.xhtml</file>
             <file>file:/C:/Users/Humberto%20Manjarres/Documents/NetBeansProjects/Control/src/java/Maestros/Logica/LogicaUsuario.java</file>
-            <file>file:/C:/Users/Humberto%20Manjarres/Documents/NetBeansProjects/Control/web/plantilla.xhtml</file>
+            <file>file:/C:/Users/Humberto%20Manjarres/Documents/NetBeansProjects/Control/src/java/Maestros/Logica/LogicaPerfil.java</file>
             <file>file:/C:/Users/Humberto%20Manjarres/Documents/NetBeansProjects/Control/src/java/Dao/DaoSimulador.java</file>
         </group>
     </open-files>

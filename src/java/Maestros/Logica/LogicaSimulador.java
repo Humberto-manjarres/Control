@@ -9,9 +9,13 @@ import Dao.DaoSimulador;
 import Maestros.Simulador;
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import java.util.List;
@@ -29,8 +33,9 @@ public class LogicaSimulador implements Serializable {
 
     private String foco = "formSimulador:prestamo";
     Simulador simulador = new Simulador();
-    List<Simulador> listaSimulacro;
+    List<Simulador> listaSimulacro = new ArrayList<>();
     DaoSimulador daoSimulador;
+    PrimeFaces instance = PrimeFaces.current();
 
     public String getFoco() {
         return foco;
@@ -56,8 +61,8 @@ public class LogicaSimulador implements Serializable {
         this.listaSimulacro = listaSimulacro;
     }
 
-    public void calcular() {
-        listaSimulacro = new ArrayList<>();
+    public void calcular() throws ParseException {
+        //listaSimulacro = new ArrayList<>();
         daoSimulador = new DaoSimulador();
         float valorCuota = 0;
         int interesTotal = 0, capital = 0, numeroCuotas = 0, cuotaPagar = 0;
@@ -124,14 +129,31 @@ public class LogicaSimulador implements Serializable {
                 System.out.println("30");
             }
              */
-            listaSimulacro = daoSimulador.getSimulacro(prestamo, simulador.getCuotas(), simulador.getTipoCuotas(), cuotaPagar, capital);
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+            System.out.println("fecha pago --> "+sdf.format(simulador.getDiaPago()));
+            String d = sdf.format(simulador.getDiaPago());
+            listaSimulacro = daoSimulador.getSimulacro(prestamo, simulador.getCuotas(), simulador.getTipoCuotas(), cuotaPagar, capital,d);
             PrimeFaces.current().ajax().update("formSimulador:tablaSimulador");
+            
+            
             
             DecimalFormat formatea = new DecimalFormat("###,###.##");
             System.out.println("formateando cuota  -> "+formatea.format(1000));
         } catch (NumberFormatException e) {
             System.out.println("error -> " + e);
         }
+    }
+    
+    public void cancelar(){
+        simulador.setPrestamo("");
+        simulador.setTipoCuotas("");
+        simulador.setDiaPago(null);
+        foco="formSimulador:prestamo";
+        listaSimulacro.clear();
+        instance.executeScript("limpiarCampos()");
+        PrimeFaces.current().ajax().update("foco");
+        PrimeFaces.current().ajax().update("formSimulador");
     }
 
 }
