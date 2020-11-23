@@ -91,7 +91,7 @@
                             <p:outputLabel value="Nombre:"/>
                         </p:column>
                         <p:column style="width: 170px">
-                            <p:inputText style="width: 132px" id="nombre" value="#{LogicaCliente.cliente.nombre}"/>
+                            <p:inputText style="width: 132px" id="nombre" value="#{LogicaCliente.cliente.nombre}" onkeyup="aMayusculas(this.value, this.id);"/>
                         </p:column>
                         <p:column style="width: 60px">
                             <p:outputLabel value="Apellidos:"/>

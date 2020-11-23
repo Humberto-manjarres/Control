@@ -21,6 +21,44 @@
                 });
             }
             
+            function guardarEditar() {
+                let idEmpresa = document.getElementById('formEmpresa:codigoEmp').value;
+                let idTelefono = document.getElementById('formEmpresa:telefono').value;
+                let idNombre = document.getElementById('formEmpresa:nombre').value;
+                
+                var mensajeError = [];
+                
+                if (idEmpresa === '') {
+                    mensajeError.push('Codigo');
+                }
+                
+                if (idTelefono === ''){
+                    mensajeError.push('Telefono');
+                }
+                
+                if (idNombre === '') {
+                    mensajeError.push('Nombre');    
+                }
+                
+                
+                
+                var cont = 0;
+                for (var i = 0; i < mensajeError.length; i++) {
+                    cont++;
+                }
+                
+                if (cont === 0) {
+                    //entrar
+                } else {
+                   Swal.fire({
+                        icon: 'error',
+                        title: 'Error...',
+                        text: 'Ingresar: "' + mensajeError.join(' - ') + '"'
+                    });     
+                }
+                
+            }
+            
             //]]>
         </script>
     </h:head>
@@ -33,11 +71,12 @@
                             <p:outputLabel value="Codigo:"/>
                         </p:column>
                         <p:column style="width: 150px">
-                            <p:inputText style="width: 100px" id="codigo" onblur="aMayusculas(this.value, this.id)" onkeydown="if (event.keyCode === 13) {
-                                        if (document.getElementById('formEmpresa:codigo').value ==='') {
+                            <p:remoteCommand name="get_Empresa" action="#{LogicaEmpresa.get_Empresa()}"/>
+                            <p:inputText style="width: 100px" id="codigoEmp" value="#{LogicaEmpresa.empresa.codigo}" onkeyup="aMayusculas(this.value, this.id);" onkeydown="if (event.keyCode === 13) {
+                                        if (document.getElementById('formEmpresa:codigoEmp').value ==='') {
                                             idVacio();
                                         }else{
-                                            
+                                            get_Empresa();
                                         }
                                         return false;
                                     }"/>
@@ -47,7 +86,7 @@
                             <p:outputLabel value="Telefono:"/>
                         </p:column>
                         <p:column style="width: 170px">
-                            <p:inputText style="width: 230px" id="telefono"/>
+                            <p:inputText style="width: 230px" id="telefono" value="#{LogicaEmpresa.empresa.telefono}"/>
                         </p:column>
                     </p:row>
                     <p:row>
@@ -55,7 +94,7 @@
                             <p:outputLabel value="Nombre:"/>
                         </p:column>
                         <p:column style="width: 170px" colspan="3">
-                            <p:inputText style="width: 555px" id="nombre"/>
+                            <p:inputText style="width: 555px" id="nombre" value="#{LogicaEmpresa.empresa.nombre}" onkeyup="aMayusculas(this.value, this.id);"/>
                         </p:column>
                     </p:row>
                      <p:row>
@@ -63,7 +102,7 @@
                             <p:outputLabel value="Email:"/>
                         </p:column>
                         <p:column style="width: 170px" colspan="3">
-                            <p:inputText style="width: 555px" id="email" placeholder="example@example.com"/>
+                            <p:inputText style="width: 555px" id="email" placeholder="example@example.com"  value="#{LogicaEmpresa.empresa.email}"/>
                         </p:column>
                     </p:row>
                     <p:row>
@@ -71,7 +110,7 @@
                             <p:outputLabel value="Direccion:"/>
                         </p:column>
                         <p:column colspan="3">
-                            <p:inputTextarea style="width: 555px" id="direccion" autoResize="false"/>
+                            <p:inputTextarea style="width: 555px" id="direccion" autoResize="false"  value="#{LogicaEmpresa.empresa.direccion}"/>
                         </p:column>
                     </p:row>
                     <p:row>
@@ -79,13 +118,13 @@
                             <p:outputLabel value="Actividad:"/>
                         </p:column>
                         <p:column colspan="3">
-                            <p:inputTextarea style="width: 555px" id="actividad" autoResize="false"/>
+                            <p:inputTextarea style="width: 555px" id="actividad" autoResize="false"  value="#{LogicaEmpresa.empresa.actividad}"/>
                         </p:column>
                     </p:row>
                 </p:panelGrid>
                  <p:toolbar style="margin-top: 10px;">
                     <f:facet name="left">
-                        <p:commandButton id="btnGuardar" style="width: 110px; text-align: left" value="Guardar"/>
+                        <p:commandButton id="btnGuardar" style="width: 110px; text-align: left" value="Guardar" onclick="guardarEditar()"/>
                         <p:commandButton style="width: 110px; text-align: left" value="Cancelar" icon="fas fa-sync"/>
                         <p:commandButton style="width: 110px; text-align: left" value="Salir" icon="fas fa-times-circle" onclick="parent.cerrarTab('empresas')"/>
                     </f:facet>
